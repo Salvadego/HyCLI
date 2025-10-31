@@ -96,19 +96,19 @@ These are consumed by `flex`, `impex`, `script`, and plugins.
 Run a FlexibleSearch query:
 
 ```bash
-flex query "SELECT {pk} FROM {Product}" --max 10 --output json
+hycli flex query "SELECT {pk} FROM {Product}" --max 10 --output json
 ```
 
 SQL-only:
 
 ```bash
-flex query "SELECT {pk} FROM {Product}" --sql
+hycli flex query "SELECT {pk} FROM {Product}" --sql
 ```
 
 Run raw SQL:
 
 ```bash
-flex sql "SELECT * FROM products" --max 100
+hycli flex sql "SELECT * FROM products" --max 100
 ```
 
 ## Impex
@@ -116,13 +116,13 @@ flex sql "SELECT * FROM products" --max 100
 Import:
 
 ```bash
-impex import --file sample.impex
+hycli impex import --file sample.impex
 ```
 
 Export:
 
 ```bash
-impex export --file export.impex --output result.zip
+hycli impex export --file export.impex --output result.zip
 ```
 
 ## Scripts
@@ -130,19 +130,19 @@ impex export --file export.impex --output result.zip
 Run Groovy by file:
 
 ```bash
-script run --file hello.groovy
+hycli script run --file hello.groovy
 ```
 
 Run inline:
 
 ```bash
-script run "print 'Hello world'"
+hycli script run "print 'Hello world'"
 ```
 
 Choose script type:
 
 ```bash
-script run my.js --type javascript
+hycli script run --file my.js --type javascript
 ```
 
 ## Plugins
@@ -191,7 +191,7 @@ The file is auto-generated if missing.
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-org/hycli.git
+git clone https://github.com/Salvadego/hycli.git
 cd hycli
 ```
 
@@ -199,9 +199,9 @@ Build binaries:
 
 ```bash
 go build -o hycli main.go
-go build -o hycli-flex flex/main.go
-go build -o hycli-impex impex/main.go
-go build -o hycli-script script/main.go
+go build -o hycli-flex plugins/flex/main.go
+go build -o hycli-impex plugins/impex/main.go
+go build -o hycli-script plugins/script/main.go
 ```
 
 Place them into PATH:
