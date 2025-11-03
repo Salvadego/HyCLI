@@ -1,5 +1,7 @@
 github.com/Salvadego/hac v0.0.0-20251030183317-f928ef1a4de3 h1:+dqPApp9JT5DoQTdvfICfR9jwmHc4vlfwlcgxE9yFxk=
 github.com/Salvadego/hac v0.0.0-20251030183317-f928ef1a4de3/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
+github.com/Salvadego/hac v0.0.0-20251103181813-da47c05e032e h1:CXVRwbvMWkV0S/YCYhjiMXCiaVbu9CRGG/sHo4UcCXM=
+github.com/Salvadego/hac v0.0.0-20251103181813-da47c05e032e/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
 github.com/anaskhan96/soup v1.2.5 h1:V/FHiusdTrPrdF4iA1YkVxsOpdNcgvqT1hG+YtcZ5hM=
 github.com/anaskhan96/soup v1.2.5/go.mod h1:6YnEp9A2yywlYdM4EgDz9NEHclocMepEtku7wg6Cq3s=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=

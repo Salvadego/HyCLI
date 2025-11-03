@@ -67,7 +67,7 @@ var flexQueryCmd = &cobra.Command{
 	},
 }
 
-func flexQueryOutput(resp *hac.FlexSearchResponse, out OutputType) error {
+func flexOutputSuccess(resp *hac.FlexSearchResponse, out OutputType) error {
 	switch out {
 	case JSONOutput:
 		b, err := json.MarshalIndent(resp.ResultList, "", "  ")
@@ -101,6 +101,40 @@ func flexQueryOutput(resp *hac.FlexSearchResponse, out OutputType) error {
 		}
 		return nil
 	}
+}
+
+func flexOutputException(resp *hac.FlexSearchResponse, out OutputType) error {
+	switch out {
+	case JSONOutput:
+		b, err := json.MarshalIndent(resp.Exception, "", "  ")
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(b))
+		return nil
+	case CSVOutput:
+		w := csv.NewWriter(os.Stdout)
+		if err := w.Write([]string{"Exception"}); err != nil {
+			return err
+		}
+		if err := w.Write([]string{resp.Exception.Exception.Cause.Message}); err != nil {
+			return err
+		}
+		w.Flush()
+		return w.Error()
+	default:
+		fmt.Println("Exception:", resp.Exception.Exception.Cause.Message)
+		return nil
+	}
+}
+
+func flexQueryOutput(resp *hac.FlexSearchResponse, out OutputType) error {
+	if resp.Exception.Exception.Message != "" {
+		return flexOutputException(resp, out)
+	}
+
+	flexOutputSuccess(resp, out)
+	return nil
 }
 
 func init() {
