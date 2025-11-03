@@ -117,19 +117,19 @@ func flexOutputException(resp *hac.FlexSearchResponse, out OutputType) error {
 		if err := w.Write([]string{"Exception"}); err != nil {
 			return err
 		}
-		if err := w.Write([]string{resp.Exception.Exception.Cause.Message}); err != nil {
+		if err := w.Write([]string{resp.Exception.Cause.Message}); err != nil {
 			return err
 		}
 		w.Flush()
 		return w.Error()
 	default:
-		fmt.Println("Exception:", resp.Exception.Exception.Cause.Message)
+		fmt.Println("Exception:\n", resp.Exception.Cause.Message)
 		return nil
 	}
 }
 
 func flexQueryOutput(resp *hac.FlexSearchResponse, out OutputType) error {
-	if resp.Exception.Exception.Message != "" {
+	if resp.Exception.Message != "" {
 		return flexOutputException(resp, out)
 	}
 

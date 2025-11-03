@@ -3,7 +3,7 @@ module flex
 go 1.25.3
 
 require (
-	github.com/Salvadego/hac v0.0.0-20251103181813-da47c05e032e
+	github.com/Salvadego/hac v0.0.0-20251103182641-c3dc52c71b0e
 	github.com/spf13/cobra v1.10.1
 )
 
