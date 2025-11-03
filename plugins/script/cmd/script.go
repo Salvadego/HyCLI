@@ -68,7 +68,15 @@ var scriptCmd = &cobra.Command{
 func pritnOutput(resp *hac.GroovyResponse, format internal.OutputFormat) {
 	switch format {
 	case internal.OutputTable:
-		fmt.Println(resp.Output)
+		if resp.Output != "" {
+			fmt.Println(resp.Output)
+		}
+		if resp.Result != "" {
+			fmt.Println(resp.Result)
+		}
+		if resp.Stacktrace != "" {
+			fmt.Println(resp.Stacktrace)
+		}
 	case internal.OutputJSON:
 		b, err := json.MarshalIndent(resp, "", "  ")
 		if err != nil {
