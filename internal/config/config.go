@@ -1,6 +1,7 @@
 package config
 
 import (
+	"HyCLI/internal/paths"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,8 +10,6 @@ import (
 )
 
 const (
-	configDir  = ".config"
-	appName    = "hycli"
 	configFile = "config.yaml"
 )
 
@@ -26,11 +25,11 @@ type ClientEntry struct {
 }
 
 func GetConfigPath() (string, error) {
-	homeDir, err := os.UserHomeDir()
+	dirs, err := paths.Directories()
 	if err != nil {
-		return "", fmt.Errorf("failed to get user home directory: %w", err)
+		return "", fmt.Errorf("failed to get hycli directories %w", err)
 	}
-	return filepath.Join(homeDir, configDir, appName, configFile), nil
+	return filepath.Join(dirs.Config, configFile), nil
 }
 
 func LoadConfig() (*Config, error) {
@@ -81,27 +80,26 @@ func SaveConfig(cfg *Config) error {
 
 func InitializeConfig() (*Config, error) {
 	cfg, err := LoadConfig()
-
-	if err != nil {
-		cfgDir, err := GetConfigPath()
-		if err != nil {
-			return nil, err
-		}
-
-		fmt.Printf("Configuration file not found. Creating a default config at %s...\n", cfgDir)
-
-		defaultCfg := &Config{
-			DefaultClient: "",
-			Clients:       make(map[string]ClientEntry),
-		}
-
-		saveErr := SaveConfig(defaultCfg)
-		if saveErr != nil {
-			return nil, fmt.Errorf("failed to save default config: %w", saveErr)
-		}
-		fmt.Println("Default config created successfully.")
-		return defaultCfg, nil
+	if err == nil {
+		return cfg, nil
 	}
 
-	return cfg, nil
+	cfgPath, err := GetConfigPath()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("Configuration file not found. Creating a default config at %s...\n", cfgPath)
+
+	defaultCfg := &Config{
+		DefaultClient: "",
+		Clients:       make(map[string]ClientEntry),
+	}
+
+	if saveErr := SaveConfig(defaultCfg); saveErr != nil {
+		return nil, fmt.Errorf("failed to save default config: %w", saveErr)
+	}
+
+	fmt.Println("Default config created successfully.")
+	return defaultCfg, nil
 }

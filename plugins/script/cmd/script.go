@@ -18,6 +18,7 @@ var (
 	scriptFile string
 	scriptOut  string
 	scriptType string
+	scriptArgs []string
 )
 
 var scriptCmd = &cobra.Command{
@@ -36,6 +37,13 @@ var scriptCmd = &cobra.Command{
 			scriptContent = strings.Join(args, "\n")
 			if scriptContent == "" {
 				return fmt.Errorf("no script provided")
+			}
+		}
+
+		if len(scriptArgs) > 0 {
+			for i, arg := range scriptArgs {
+				placeholder := fmt.Sprintf("$%d", i+1)
+				scriptContent = strings.ReplaceAll(scriptContent, placeholder, arg)
 			}
 		}
 
@@ -92,6 +100,7 @@ func init() {
 	scriptCmd.Flags().StringVarP(&scriptFile, "file", "f", "", "File containing the script")
 	scriptCmd.Flags().StringVarP(&scriptType, "type", "t", "", "Script type: groovy|javascript|beanshell")
 	scriptCmd.Flags().StringVarP(&scriptOut, "output", "o", "table", "table|json")
+	scriptCmd.Flags().StringArrayVarP(&scriptArgs, "param", "P", nil, "Script parameters (use multiple -P flags)")
 
 	scriptCmd.RegisterFlagCompletionFunc("output", utils.CompleteOutputFormat)
 	scriptCmd.RegisterFlagCompletionFunc("type", utils.CompleteScriptType)
