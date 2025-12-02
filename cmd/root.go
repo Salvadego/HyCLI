@@ -16,14 +16,15 @@ var rootCmd = &cobra.Command{
 	Short: "Hybris Administration Console CLI",
 	Long:  "hycli is a CLI for interacting with SAP Hybris HAC endpoints",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		dirs, err := paths.Directories()
-		if err != nil {
-			return fmt.Errorf("failed to get hycli directories %w", err)
-		}
-
 		cfg, err := config.InitializeConfig()
 		if err != nil {
 			return fmt.Errorf("failed to initialize config: %w", err)
+		}
+
+		dirs := cfg.DirSet
+		scriptsDir, err := paths.ScriptsDir(dirs)
+		if err != nil {
+			return fmt.Errorf("failed to get scripts directory %w", err)
 		}
 
 		activeClient := cfg.DefaultClient
@@ -37,6 +38,7 @@ var rootCmd = &cobra.Command{
 		if activeClient != "" {
 			clientCfg := cfg.Clients[activeClient]
 			_ = os.Setenv("HYCLI_CONFIG_HOME", dirs.Config)
+			_ = os.Setenv("HYCLI_SCRIPT_HOME", scriptsDir)
 			_ = os.Setenv("HYCLI_DATA_HOME", dirs.Data)
 			_ = os.Setenv("HYCLI_STATE_HOME", dirs.State)
 			_ = os.Setenv("HYCLI_CLIENT_NAME", activeClient)

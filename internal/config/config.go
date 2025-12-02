@@ -9,12 +9,9 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const (
-	configFile = "config.yaml"
-)
-
 type Config struct {
 	DefaultClient string                 `yaml:"defaultClient"`
+	DirSet        paths.DirSet           `yaml:"dirSet"`
 	Clients       map[string]ClientEntry `yaml:"clients"`
 }
 
@@ -24,16 +21,13 @@ type ClientEntry struct {
 	Password string `yaml:"password"`
 }
 
-func GetConfigPath() (string, error) {
-	dirs, err := paths.Directories()
-	if err != nil {
-		return "", fmt.Errorf("failed to get hycli directories %w", err)
-	}
-	return filepath.Join(dirs.Config, configFile), nil
-}
-
 func LoadConfig() (*Config, error) {
-	configPath, err := GetConfigPath()
+	dirs, err := DefaultDirectories()
+	if err != nil {
+		return nil, err
+	}
+
+	configPath, err := paths.GetConfigPath(*dirs)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +50,12 @@ func LoadConfig() (*Config, error) {
 }
 
 func SaveConfig(cfg *Config) error {
-	configPath, err := GetConfigPath()
+	dirs, err := DefaultDirectories()
+	if err != nil {
+		return err
+	}
+
+	configPath, err := paths.GetConfigPath(*dirs)
 	if err != nil {
 		return err
 	}
@@ -75,25 +74,74 @@ func SaveConfig(cfg *Config) error {
 	if err != nil {
 		return fmt.Errorf("failed to write configuration file: %w", err)
 	}
+
+	return nil
+}
+
+func DefaultDirectories() (*paths.DirSet, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	dirs := &paths.DirSet{
+		Config: filepath.Join(home, ".config", "hycli"),
+		Data:   filepath.Join(home, ".local", "share", "hycli"),
+		State:  filepath.Join(home, ".local", "state", "hycli"),
+	}
+	for _, d := range []string{dirs.Config, dirs.Data, dirs.State} {
+		if err := os.MkdirAll(d, 0755); err != nil {
+			return nil, fmt.Errorf("failed to create %s: %w", d, err)
+		}
+	}
+
+	return dirs, nil
+}
+
+func ValidateConfig(cfg *Config) error {
+	if cfg.DirSet.Config == "" {
+		dirs, err := DefaultDirectories()
+		if err != nil {
+			return fmt.Errorf("failed to get hycli directories %w", err)
+		}
+
+		cfg.DirSet = *dirs
+		err = SaveConfig(cfg)
+		if err != nil {
+			return fmt.Errorf("failed to save config: %w", err)
+		}
+	}
+
 	return nil
 }
 
 func InitializeConfig() (*Config, error) {
 	cfg, err := LoadConfig()
 	if err == nil {
+
+		err = ValidateConfig(cfg)
+		if err != nil {
+			return nil, err
+		}
+
 		return cfg, nil
 	}
 
-	cfgPath, err := GetConfigPath()
+	cfgPath, err := paths.GetConfigPath(cfg.DirSet)
 	if err != nil {
 		return nil, err
 	}
 
 	fmt.Printf("Configuration file not found. Creating a default config at %s...\n", cfgPath)
 
+	dirs, err := DefaultDirectories()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get hycli directories %w", err)
+	}
+
 	defaultCfg := &Config{
 		DefaultClient: "",
 		Clients:       make(map[string]ClientEntry),
+		DirSet:        *dirs,
 	}
 
 	if saveErr := SaveConfig(defaultCfg); saveErr != nil {

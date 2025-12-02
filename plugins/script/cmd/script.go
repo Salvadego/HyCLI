@@ -27,7 +27,18 @@ var scriptCmd = &cobra.Command{
 	Args:  cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var scriptContent string
-		if scriptFile != "" {
+		if templateName != "" {
+			if scriptDir == "" {
+				return fmt.Errorf("Script dir couldn't be found.")
+			}
+
+			templateFile := fmt.Sprintf("%s/%s", scriptDir, templateName)
+			b, err := os.ReadFile(templateFile)
+			if err != nil {
+				return err
+			}
+			scriptContent = string(b)
+		} else if scriptFile != "" {
 			b, err := os.ReadFile(scriptFile)
 			if err != nil {
 				return err
@@ -101,7 +112,9 @@ func init() {
 	scriptCmd.Flags().StringVarP(&scriptType, "type", "t", "", "Script type: groovy|javascript|beanshell")
 	scriptCmd.Flags().StringVarP(&scriptOut, "output", "o", "table", "table|json")
 	scriptCmd.Flags().StringArrayVarP(&scriptArgs, "param", "P", nil, "Script parameters (use multiple -P flags)")
+	scriptCmd.Flags().StringVarP(&templateName, "template", "T", "", "Script template")
 
 	scriptCmd.RegisterFlagCompletionFunc("output", utils.CompleteOutputFormat)
+	scriptCmd.RegisterFlagCompletionFunc("template", utils.CompleteTemplateName)
 	scriptCmd.RegisterFlagCompletionFunc("type", utils.CompleteScriptType)
 }
