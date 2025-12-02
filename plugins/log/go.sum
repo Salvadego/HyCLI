@@ -2,6 +2,8 @@ github.com/Salvadego/hac v0.0.0-20251103182641-c3dc52c71b0e h1:9LuUJMxK8AP8mvkTZ
 github.com/Salvadego/hac v0.0.0-20251103182641-c3dc52c71b0e/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
 github.com/Salvadego/hac v0.0.0-20251201200934-ed1ef675c58e h1:EyQ1DBb4mRj2KWOdoUxqV5OMiODd4SUAJEhEgNgLmz4=
 github.com/Salvadego/hac v0.0.0-20251201200934-ed1ef675c58e/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
+github.com/Salvadego/hac v0.0.0-20251202174252-a7d55c7b1553 h1:BOGaqfGHBXK2Mrj8riG/WFOHm5duqQDqZh9XqmmF+1w=
+github.com/Salvadego/hac v0.0.0-20251202174252-a7d55c7b1553/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
 github.com/anaskhan96/soup v1.2.5 h1:V/FHiusdTrPrdF4iA1YkVxsOpdNcgvqT1hG+YtcZ5hM=
 github.com/anaskhan96/soup v1.2.5/go.mod h1:6YnEp9A2yywlYdM4EgDz9NEHclocMepEtku7wg6Cq3s=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=

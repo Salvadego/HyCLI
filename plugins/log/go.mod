@@ -11,7 +11,7 @@ require (
 )
 
 require (
-	github.com/Salvadego/hac v0.0.0-20251201200934-ed1ef675c58e
+	github.com/Salvadego/hac v0.0.0-20251202174252-a7d55c7b1553
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 )
