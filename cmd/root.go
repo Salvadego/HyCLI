@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"HyCLI/internal/config"
+	"HyCLI/internal/paths"
 	"HyCLI/internal/plugins"
 	"HyCLI/internal/utils"
 	"fmt"
@@ -20,6 +21,12 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("failed to initialize config: %w", err)
 		}
 
+		dirs := cfg.DirSet
+		scriptsDir, err := paths.ScriptsDir(dirs)
+		if err != nil {
+			return fmt.Errorf("failed to get scripts directory %w", err)
+		}
+
 		activeClient := cfg.DefaultClient
 		if client != "" {
 			if _, ok := cfg.Clients[client]; !ok {
@@ -30,6 +37,10 @@ var rootCmd = &cobra.Command{
 
 		if activeClient != "" {
 			clientCfg := cfg.Clients[activeClient]
+			_ = os.Setenv("HYCLI_CONFIG_HOME", dirs.Config)
+			_ = os.Setenv("HYCLI_SCRIPT_HOME", scriptsDir)
+			_ = os.Setenv("HYCLI_DATA_HOME", dirs.Data)
+			_ = os.Setenv("HYCLI_STATE_HOME", dirs.State)
 			_ = os.Setenv("HYCLI_CLIENT_NAME", activeClient)
 			_ = os.Setenv("HYCLI_CLIENT_URL", clientCfg.Address)
 			_ = os.Setenv("HYCLI_CLIENT_USER", clientCfg.User)

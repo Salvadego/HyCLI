@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"time"
 
 	"github.com/Salvadego/hac/hac"
 )
@@ -9,6 +10,7 @@ import (
 func New(baseURL, user, pass string, skip bool) *hac.HACClient {
 	return hac.NewClient(&hac.Config{
 		BaseURL:       baseURL,
+		Timeout:       time.Minute * 5,
 		Username:      user,
 		Password:      pass,
 		SkipTLSVerify: skip,
