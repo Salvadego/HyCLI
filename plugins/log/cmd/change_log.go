@@ -12,20 +12,9 @@ import (
 )
 
 var (
-	client     *hac.HACClient = nil
 	loggerName string
 	logLevel   string
 )
-
-func getClient() *hac.HACClient {
-	if client != nil {
-		return client
-	}
-
-	c := internal.New(baseURL, username, password, skipVerify)
-	client = c
-	return c
-}
 
 func init() {
 	changeLogCmd.Flags().StringVarP(&logLevel, "level", "l", "", "Log level")
@@ -34,69 +23,73 @@ func init() {
 }
 
 var changeLogCmd = &cobra.Command{
-	Use:   "change_log [logger_name]",
-	Short: "Changes the log level of a logger",
-	Args:  cobra.ArbitraryArgs,
-	ValidArgsFunction: func(
-		cmd *cobra.Command,
-		args []string,
-		toComplete string,
-	) ([]string, cobra.ShellCompDirective) {
-		if len(args) > 0 {
-			return nil, cobra.ShellCompDirectiveNoFileComp
+	Use:               "change_log [logger_name]",
+	Short:             "Changes the log level of a logger",
+	Args:              cobra.ArbitraryArgs,
+	ValidArgsFunction: CompleteLoggers,
+	RunE:              RunChangeLogCmd,
+}
+
+func RunChangeLogCmd(cmd *cobra.Command, args []string) error {
+
+	if len(args) == 0 {
+		fmt.Println("Logger name is requeried")
+		return cmd.Help()
+	}
+
+	if logLevel == "" {
+		fmt.Println("Log level is requeried")
+		return cmd.Help()
+	}
+
+	loggerName = args[0]
+
+	c := internal.New(baseURL, username, password, skipVerify)
+	ctx := context.Background()
+
+	if err := internal.Login(c, ctx); err != nil {
+		return err
+	}
+
+	level := hac.LogLevelName(logLevel)
+	resp, err := c.Log.ChangeLogLevel(ctx, loggerName, level)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%s is now: %s\n", resp.LoggerName, resp.LevelName)
+
+	return nil
+}
+
+func CompleteLoggers(
+	cmd *cobra.Command,
+	args []string,
+	toComplete string,
+) ([]string, cobra.ShellCompDirective) {
+	if len(args) > 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	ctx := context.Background()
+
+	c := internal.New(baseURL, username, password, skipVerify)
+	if err := internal.Login(c, ctx); err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	loggersResp, err := c.Log.GetCurrentLoggers(ctx)
+
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	var completions []string
+	for _, logger := range loggersResp {
+		if strings.HasPrefix(logger.Name, toComplete) {
+			item := fmt.Sprintf("%s\t(%s)", logger.Name, logger.EffectiveLevel.StandardLevel)
+			completions = append(completions, item)
 		}
-
-		ctx := context.Background()
-
-		c := getClient()
-		if err := internal.Login(c, ctx); err != nil {
-			return nil, cobra.ShellCompDirectiveNoFileComp
-		}
-
-		loggersResp, err := c.Log.GetCurrentLoggers(ctx)
-
-		if err != nil {
-			return nil, cobra.ShellCompDirectiveNoFileComp
-		}
-
-		var completions []string
-		for _, logger := range loggersResp {
-			if strings.HasPrefix(logger.Name, toComplete) {
-				completions = append(completions, logger.Name)
-			}
-		}
-		return completions, cobra.ShellCompDirectiveNoFileComp
-	},
-
-	RunE: func(cmd *cobra.Command, args []string) error {
-
-		if len(args) == 0 {
-			fmt.Println("Logger name is requeried")
-			return cmd.Help()
-		}
-
-		if logLevel == "" {
-			fmt.Println("Log level is requeried")
-			return cmd.Help()
-		}
-
-		loggerName = args[0]
-
-		c := getClient()
-		ctx := context.Background()
-
-		if err := internal.Login(c, ctx); err != nil {
-			return err
-		}
-
-		level := hac.LogLevelName(logLevel)
-		resp, err := c.Log.ChangeLogLevel(ctx, loggerName, level)
-		if err != nil {
-			return err
-		}
-
-		fmt.Printf("%s is now: %s\n", resp.LoggerName, resp.LevelName)
-
-		return nil
-	},
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
