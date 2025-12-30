@@ -15,10 +15,11 @@ import (
 )
 
 var (
-	scriptFile string
-	scriptOut  string
-	scriptType string
-	scriptArgs []string
+	scriptFile         string
+	scriptOut          string
+	scriptType         string
+	scriptShouldCommit bool
+	scriptArgs         []string
 )
 
 var scriptCmd = &cobra.Command{
@@ -72,6 +73,7 @@ var scriptCmd = &cobra.Command{
 
 		resp, err := c.Groovy.Execute(ctx, hac.GroovyRequest{
 			Script:     scriptContent,
+			Commit:     scriptShouldCommit,
 			ScriptType: stype,
 		})
 		if err != nil {
@@ -113,6 +115,7 @@ func init() {
 	scriptCmd.Flags().StringVarP(&scriptOut, "output", "o", "table", "table|json")
 	scriptCmd.Flags().StringArrayVarP(&scriptArgs, "param", "P", nil, "Script parameters (use multiple -P flags)")
 	scriptCmd.Flags().StringVarP(&templateName, "template", "T", "", "Script template")
+	scriptCmd.Flags().BoolVarP(&scriptShouldCommit, "commit", "c", false, "Should commit changes")
 
 	scriptCmd.RegisterFlagCompletionFunc("output", utils.CompleteOutputFormat)
 	scriptCmd.RegisterFlagCompletionFunc("template", utils.CompleteTemplateName)
