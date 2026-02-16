@@ -22,6 +22,29 @@ var (
 	scriptArgs         []string
 )
 
+func escapeForGroovyDoubleQuotedString(s string) string {
+	var b strings.Builder
+	for _, r := range s {
+		switch r {
+		case '\\':
+			b.WriteString(`\\`)
+		case '"':
+			b.WriteString(`\"`)
+		case '$':
+			b.WriteString(`\$`)
+		case '\n':
+			b.WriteString(`\n`)
+		case '\r':
+			b.WriteString(`\r`)
+		case '\t':
+			b.WriteString(`\t`)
+		default:
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
+}
+
 var scriptCmd = &cobra.Command{
 	Use:   "run [SCRIPT]",
 	Short: "Execute a script",
@@ -55,7 +78,8 @@ var scriptCmd = &cobra.Command{
 		if len(scriptArgs) > 0 {
 			for i, arg := range scriptArgs {
 				placeholder := fmt.Sprintf("$%d", i+1)
-				scriptContent = strings.ReplaceAll(scriptContent, placeholder, arg)
+				escaped := escapeForGroovyDoubleQuotedString(arg)
+				scriptContent = strings.ReplaceAll(scriptContent, placeholder, escaped)
 			}
 		}
 
