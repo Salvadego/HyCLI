@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 
 	"hycli-impex/internal"
 	"hycli-impex/utils"
@@ -32,7 +33,8 @@ var importCmd = &cobra.Command{
 		}
 
 		c := internal.New(baseURL, username, password, skipVerify)
-		ctx := context.Background()
+		ctx, cancel := context.WithTimeout(context.Background(), time.Hour * 2)
+		defer cancel()
 		if err := internal.Login(c, ctx); err != nil {
 			return err
 		}

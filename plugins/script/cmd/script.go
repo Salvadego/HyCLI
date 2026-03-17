@@ -75,13 +75,29 @@ var scriptCmd = &cobra.Command{
 			}
 		}
 
-		if len(scriptArgs) > 0 {
-			for i, arg := range scriptArgs {
-				placeholder := fmt.Sprintf("$%d", i+1)
-				escaped := escapeForGroovyDoubleQuotedString(arg)
+		var header strings.Builder
+		header.WriteString("// --- Hycli-generated Header ---\n")
+		header.WriteString("def params = [:]\n")
+		header.WriteString("def args = []\n")
+
+		positionalIdx := 1
+		for _, arg := range scriptArgs {
+			escaped := escapeForGroovyDoubleQuotedString(arg)
+
+			if strings.Contains(arg, "=") {
+				parts := strings.SplitN(escaped, "=", 2)
+				fmt.Fprintf(&header, "params['%s'] = \"%s\"\n", parts[0], parts[1])
+			} else {
+				fmt.Fprintf(&header, "args << \"%s\"\n", escaped)
+
+				placeholder := fmt.Sprintf("$%d", positionalIdx)
 				scriptContent = strings.ReplaceAll(scriptContent, placeholder, escaped)
+				positionalIdx++
 			}
 		}
+
+		scriptContent = header.String() + "\n" + scriptContent
+		// fmt.Println(scriptContent)
 
 		c := internal.New(baseURL, username, password, skipVerify)
 		ctx := context.Background()

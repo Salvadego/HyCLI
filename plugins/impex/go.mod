@@ -3,7 +3,7 @@ module hycli-impex
 go 1.25.3
 
 require (
-	github.com/Salvadego/hac v0.0.0-20251031200459-171a7d063093
+	github.com/Salvadego/hac v0.0.0-20260317110454-afef9b58c154
 	github.com/spf13/cobra v1.10.1
 )
 

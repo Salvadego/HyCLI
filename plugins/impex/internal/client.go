@@ -10,6 +10,7 @@ func New(baseURL, user, pass string, skip bool) *hac.HACClient {
 	return hac.NewClient(&hac.Config{
 		BaseURL:       baseURL,
 		Username:      user,
+		Timeout:       -1,
 		Password:      pass,
 		SkipTLSVerify: skip,
 	})

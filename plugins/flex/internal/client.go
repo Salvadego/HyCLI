@@ -2,7 +2,6 @@ package internal
 
 import (
 	"context"
-
 	"github.com/Salvadego/hac/hac"
 )
 

@@ -4,6 +4,10 @@ github.com/Salvadego/hac v0.0.0-20251031200015-b91f407227e9 h1:ETrFSer371D4BUi1g
 github.com/Salvadego/hac v0.0.0-20251031200015-b91f407227e9/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
 github.com/Salvadego/hac v0.0.0-20251031200459-171a7d063093 h1:khXf/p9bn4tM1n/nEg1fT5ZlnXV7sUOY4MzQ8lcaBXA=
 github.com/Salvadego/hac v0.0.0-20251031200459-171a7d063093/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
+github.com/Salvadego/hac v0.0.0-20260317110238-fe511e2243af h1:X8eJ3mieGMeC6fVA8jnhWiv3Krzih/nEGlqGFVn0XfI=
+github.com/Salvadego/hac v0.0.0-20260317110238-fe511e2243af/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
+github.com/Salvadego/hac v0.0.0-20260317110454-afef9b58c154 h1:gnj+xNilzt+gOZet0tvyijWYCO+03IOH+/mMDgoYQW4=
+github.com/Salvadego/hac v0.0.0-20260317110454-afef9b58c154/go.mod h1:kDX/6be8CSCny1/otABBhBf8hbsnTjO4sqGtGNLH+PA=
 github.com/anaskhan96/soup v1.2.5 h1:V/FHiusdTrPrdF4iA1YkVxsOpdNcgvqT1hG+YtcZ5hM=
 github.com/anaskhan96/soup v1.2.5/go.mod h1:6YnEp9A2yywlYdM4EgDz9NEHclocMepEtku7wg6Cq3s=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=

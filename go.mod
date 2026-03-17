@@ -1,6 +1,6 @@
 module HyCLI
 
-go 1.24.1
+go 1.25.3
 
 require (
 	github.com/spf13/cobra v1.10.1
@@ -8,6 +8,10 @@ require (
 )
 
 require (
+	github.com/Salvadego/hac v0.0.0-20260317110454-afef9b58c154 // indirect
+	github.com/anaskhan96/soup v1.2.5 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
+	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
+	golang.org/x/text v0.3.0 // indirect
 )
