@@ -20,8 +20,9 @@ const (
 )
 
 var (
-	flexSQLFile string
-	flexSQLMax  int
+	flexSQLFile   string
+	flexSQLMax    int
+	flexSQLCommit bool
 )
 
 var flexSQLCmd = &cobra.Command{
@@ -55,6 +56,7 @@ var flexSQLCmd = &cobra.Command{
 			SQLQuery: q,
 			User:     username,
 			MaxCount: flexSQLMax,
+			Commit:   flexSQLCommit,
 		}, nil)
 		if err != nil {
 			return err
@@ -69,6 +71,7 @@ func init() {
 	flexSQLCmd.Flags().StringVarP(&flexSQLFile, "file", "f", "", "File with SQL")
 	flexSQLCmd.Flags().IntVarP(&flexSQLMax, "max", "m", 100, "Max results")
 	flexSQLCmd.Flags().StringVarP(&flexOut, "output", "o", "table", "table|json|csv")
+	flexSQLCmd.Flags().BoolVarP(&flexSQLCommit, "commit", "c", false, "Commit changes")
 
 	flexSQLCmd.RegisterFlagCompletionFunc("output", utils.CompleteOutputFormat)
 
